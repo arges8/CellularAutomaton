@@ -5,10 +5,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Tile extends StackPane {
+    private Rectangle border;
     public Tile(Color color) {
-        Rectangle border = new Rectangle(4,4);
+        border = new Rectangle(6,6);
         border.setFill(color);
         border.setStroke(Color.BLACK);
         getChildren().addAll(border);
+    }
+    public void setColor(Color color) {
+        border.setFill(color);
     }
 }

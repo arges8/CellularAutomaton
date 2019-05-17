@@ -1,18 +1,19 @@
 package ca.ca1D;
 
-import ca.Cell;
+import ca.Board;
+
+import ca.ca2D.tile.Tile;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board {
+public class Board1D extends Board {
     List<List<Cell1D>> cells;
-    int X;
-    int Y;
     int counter = 0;
     String binaryRule;
 
-    public Board(int size) {
+    public Board1D(int size) {
         this.Y = size;
         cells = new ArrayList<>();
         List<Cell1D> tmp = new ArrayList<>(size);
@@ -158,5 +159,14 @@ public class Board {
 
     public String getBinaryRule() {
         return binaryRule;
+    }
+
+    public void draw(List<Tile> tiles) {
+        int iter = 0;
+        for(int i=counter*Y; i<(counter+1)*Y; ++i) {
+            if(cells.get(counter).get(iter).isActive())
+                tiles.get(i).setColor(new Color(28.0 / 255.0, 153.0 / 255.0, 231.0 / 255.0, 1));
+            iter++;
+        }
     }
 }
