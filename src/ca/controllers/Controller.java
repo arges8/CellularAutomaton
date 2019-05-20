@@ -1,6 +1,7 @@
-package ca;
+package ca.controllers;
 
-import ca.ca2D.tile.Tile;
+import ca.Board;
+import ca.helpers.Tile;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 
@@ -55,7 +56,7 @@ public class Controller {
 
     private void loadSettingsController() {
         try {
-            FXMLLoader settings = new FXMLLoader(getClass().getResource("settings.fxml"));
+            FXMLLoader settings = new FXMLLoader(getClass().getResource("../templates/settings.fxml"));
             Parent root = settings.load();
 
             SettingsController settingsController = settings.getController();
@@ -100,7 +101,7 @@ public class Controller {
     void submitChanges() {
 
         try {
-            FXMLLoader settings = new FXMLLoader(getClass().getResource("settings.fxml"));
+            FXMLLoader settings = new FXMLLoader(getClass().getResource("../templates/settings.fxml"));
             Parent root = settings.load();
             Stage window = new Stage();
             window.setScene(new Scene(root));

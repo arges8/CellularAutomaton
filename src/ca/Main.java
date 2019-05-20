@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("ca1d.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("templates/ca1d.fxml"));
         primaryStage.setTitle("Cellular Automaton");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

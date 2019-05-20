@@ -1,4 +1,4 @@
-package ca.ca1D;
+package ca.ca1D.cell;
 
 import ca.Cell;
 

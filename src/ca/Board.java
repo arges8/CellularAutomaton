@@ -1,6 +1,6 @@
 package ca;
 
-import ca.ca2D.tile.Tile;
+import ca.helpers.Tile;
 
 import java.util.List;
 

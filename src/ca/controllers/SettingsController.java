@@ -1,5 +1,6 @@
-package ca;
+package ca.controllers;
 
+import ca.Board;
 import ca.ca1D.Board1D;
 import ca.ca2D.GameOfLife;
 import javafx.collections.FXCollections;
@@ -56,7 +57,7 @@ public class SettingsController {
 
     @FXML
     public void applyButton1DAction() throws IOException {
-        FXMLLoader mainGUI = new FXMLLoader(getClass().getResource("ca1d.fxml"));
+        FXMLLoader mainGUI = new FXMLLoader(getClass().getResource("../templates/ca1d.fxml"));
         mainGUI.load();
         Controller mainController = mainGUI.getController();
         Board1D tmp = new Board1D((int) sizeScroll.getValue());
@@ -66,7 +67,7 @@ public class SettingsController {
 
     @FXML
     public void applyButton2DAction(ActionEvent event) throws IOException {
-        FXMLLoader mainGUI = new FXMLLoader(getClass().getResource("ca1d.fxml"));
+        FXMLLoader mainGUI = new FXMLLoader(getClass().getResource("../templates/ca1d.fxml"));
         mainGUI.load();
         Controller mainController = mainGUI.getController();
         GameOfLife tmp = new GameOfLife((int) sizeScrollx.getValue(), (int) sizeScrolly.getValue());

@@ -2,7 +2,8 @@ package ca.ca1D;
 
 import ca.Board;
 
-import ca.ca2D.tile.Tile;
+import ca.ca1D.cell.Cell1D;
+import ca.helpers.Tile;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;

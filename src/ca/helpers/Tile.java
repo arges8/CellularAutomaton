@@ -1,4 +1,4 @@
-package ca.ca2D.tile;
+package ca.helpers;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;

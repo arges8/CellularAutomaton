@@ -2,7 +2,7 @@ package ca.ca2D;
 
 import ca.Board;
 import ca.ca2D.cell.CellGoL;
-import ca.ca2D.tile.Tile;
+import ca.helpers.Tile;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
