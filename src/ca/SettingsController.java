@@ -7,12 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollBar;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -34,12 +30,6 @@ public class SettingsController {
 
     @FXML
     private ScrollBar sizeScrolly;
-
-    @FXML
-    private Button applyButton1D;
-
-    @FXML
-    private Button applyButton2D;
 
     @FXML
     public void initialize() {
@@ -65,8 +55,9 @@ public class SettingsController {
     }
 
     @FXML
-    public void applyButton1DAction() {
+    public void applyButton1DAction() throws IOException {
         FXMLLoader mainGUI = new FXMLLoader(getClass().getResource("ca1d.fxml"));
+        mainGUI.load();
         Controller mainController = mainGUI.getController();
         Board1D tmp = new Board1D((int) sizeScroll.getValue());
         tmp.setRule(ruleBox.getValue());
@@ -76,32 +67,9 @@ public class SettingsController {
     @FXML
     public void applyButton2DAction(ActionEvent event) throws IOException {
         FXMLLoader mainGUI = new FXMLLoader(getClass().getResource("ca1d.fxml"));
-        Parent root = mainGUI.load();
+        mainGUI.load();
         Controller mainController = mainGUI.getController();
         GameOfLife tmp = new GameOfLife((int) sizeScrollx.getValue(), (int) sizeScrolly.getValue());
         mainController.setBoard(tmp);
-    }
-
-
-    public Board changeSettings(Board board, Parent root) {
-        Stage window = new Stage();
-        window.setScene(new Scene(root));
-        window.show();
-        tmpBoard = board;
-            applyButton1D.setOnAction(e -> {
-                System.out.println("BBBBBB");
-                Board1D tmp = new Board1D((int) sizeScroll.getValue());
-                tmp.setRule(ruleBox.getValue());
-                tmpBoard = tmp;
-                window.close();
-            });
-            applyButton2D.setOnAction(e -> {
-                System.out.println("CCCCC");
-                GameOfLife tmp = new GameOfLife((int) sizeScrollx.getValue(), (int) sizeScrolly.getValue());
-                tmpBoard = tmp;
-                window.close();
-            });
-
-        return tmpBoard;
     }
 }

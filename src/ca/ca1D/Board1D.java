@@ -14,7 +14,9 @@ public class Board1D extends Board {
     String binaryRule;
 
     public Board1D(int size) {
-        this.Y = size;
+        this.X = size;
+        this.Y = 110;
+        setState(SimulationState.FRESH);
         cells = new ArrayList<>();
         List<Cell1D> tmp = new ArrayList<>(size);
         for (int i = 0; i < size; ++i) {
@@ -36,16 +38,16 @@ public class Board1D extends Board {
 
     public void checkNeighbours() {
         List<Cell1D> row = cells.get(counter);
-        for (int i = 0; i < Y; ++i) {
+        for (int i = 0; i < X; ++i) {
             if (i - 1 >= 0 && row.get(i - 1).isActive())
                 row.get(i).setLeftActive(true);
-            else if (i - 1 < 0 && row.get(Y - 1).isActive())
+            else if (i - 1 < 0 && row.get(X - 1).isActive())
                 row.get(i).setLeftActive(true);
             else
                 row.get(i).setLeftActive(false);
-            if (i + 1 < Y && row.get(i + 1).isActive())
+            if (i + 1 < X && row.get(i + 1).isActive())
                 row.get(i).setRightActive(true);
-            else if (i + 1 >= Y && row.get(0).isActive())
+            else if (i + 1 >= X && row.get(0).isActive())
                 row.get(i).setRightActive(true);
             else
                 row.get(i).setRightActive(false);
@@ -163,10 +165,13 @@ public class Board1D extends Board {
 
     public void draw(List<Tile> tiles) {
         int iter = 0;
-        for(int i=counter*Y; i<(counter+1)*Y; ++i) {
-            if(cells.get(counter).get(iter).isActive())
-                tiles.get(i).setColor(new Color(28.0 / 255.0, 153.0 / 255.0, 231.0 / 255.0, 1));
-            iter++;
-        }
+        if (counter < Y) {
+            for (int i = counter * X; i < (counter + 1) * X; ++i) {
+                if (cells.get(counter).get(iter).isActive())
+                    tiles.get(i).setColor(new Color(28.0 / 255.0, 153.0 / 255.0, 231.0 / 255.0, 1));
+                iter++;
+            }
+        } else
+            setState(SimulationState.FINISHED);
     }
 }

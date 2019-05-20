@@ -1,10 +1,7 @@
 package ca;
 
 import ca.ca2D.tile.Tile;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXRadioButton;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 
 import javafx.event.ActionEvent;
@@ -30,47 +27,30 @@ public class Controller {
     int checkY;
 
     @FXML
-    private ObservableList rules = FXCollections.observableArrayList(30, 60, 90, 110, 255);
-
-    @FXML
-    private JFXButton nextButton;
-
-    @FXML
-    private ChoiceBox<Integer> ruleBox;
-
-    @FXML
-    private ScrollBar sizeScroll;
-
-    @FXML
-    private Label value;
-
-    @FXML
     private TextField timeSteps;
-
-    private ToggleGroup group;
-
-    @FXML
-    private JFXRadioButton cellular1D;
-
-    @FXML
-    private JFXRadioButton gol;
 
     @FXML
     private Pane pane;
 
+    private AnimationTimer timer;
+
     @FXML
     public void initialize() {
-        ruleBox.setValue(90);
-        ruleBox.setItems(rules);
-        sizeScroll.setMin(5);
-        sizeScroll.setMax(230);
-        sizeScroll.setValue(230);
         timeSteps.setText("1");
-        value.setText(Integer.toString((int) sizeScroll.getValue()));
         loadSettingsController();
         changeBoardSize(140, 100);
         checkX = board.getX();
         checkY = board.getY();
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                parallelDraw();
+                if (board.getState() == Board.SimulationState.FINISHED) {
+                    board.setState(Board.SimulationState.FRESH);
+                    this.stop();
+                }
+            }
+        };
     }
 
     private void loadSettingsController() {
@@ -83,17 +63,11 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @FXML
     void handleButtonAction(ActionEvent event) {
-        if(board.getX() != checkX || board.getY() != checkY)
-        {
-            changeBoardSize(board.getX(), board.getY());
-            checkX = board.getX();
-            checkY = board.getY();
-        }
+        setProperBoardSize();
         for (int i = 0; i < Integer.parseInt(timeSteps.getText()); ++i) {
             board.draw(tiles);
             board.play();
@@ -101,8 +75,25 @@ public class Controller {
     }
 
     @FXML
-    void setValueLabel() {
-        value.setText(Integer.toString((int) sizeScroll.getValue()));
+    void startSimulation() {
+        setProperBoardSize();
+        timer.start();
+    }
+
+    @FXML
+    void stopSimulation() {
+        timer.stop();
+    }
+
+    void setProperBoardSize() {
+        if (board.getX() != checkX || board.getY() != checkY) {
+            changeBoardSize(board.getX(), board.getY());
+            checkX = board.getX();
+            checkY = board.getY();
+        } else if (board.getState() == Board.SimulationState.FRESH) {
+            changeBoardSize(board.getX(), board.getY());
+            board.setState(Board.SimulationState.NOT_FRESH);
+        }
     }
 
     @FXML
@@ -119,6 +110,7 @@ public class Controller {
         }
 
     }
+
     @FXML
     public void setBoard(Board newBoard) {
         board = newBoard;
@@ -126,20 +118,23 @@ public class Controller {
 
     @FXML
     void changeBoardSize(int x, int y) {
-        int capacity = x*y;
+        int capacity = x * y;
         tiles = new LinkedList<>();
-        for(int i=0; i<capacity; ++i)
-        {
+        for (int i = 0; i < capacity; ++i) {
             tiles.add(new Tile(Color.WHITE));
         }
-        for(int i=0; i<capacity; ++i)
-        {
+        for (int i = 0; i < capacity; ++i) {
             Tile tile = tiles.get(i);
-            tile.setTranslateX(6 *(i % x));
-            tile.setTranslateY(6 *(i / x));
+            tile.setTranslateX(6 * (i % x));
+            tile.setTranslateY(6 * (i / x));
 
         }
         pane.getChildren().clear();
         pane.getChildren().addAll(tiles);
-}
+    }
+
+    private void parallelDraw() {
+        board.draw(tiles);
+        board.play();
+    }
 }
