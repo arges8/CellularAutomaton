@@ -46,6 +46,11 @@ public class Controller {
             @Override
             public void handle(long l) {
                 parallelDraw();
+                try {
+                    Thread.sleep(0);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if (board.getState() == Board.SimulationState.FINISHED) {
                     board.setState(Board.SimulationState.FRESH);
                     this.stop();

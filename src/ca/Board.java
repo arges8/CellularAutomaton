@@ -9,6 +9,7 @@ public abstract class Board {
         FRESH, NOT_FRESH, FINISHED
     }
 
+    boolean periodicBoundaryConditions = true;
     protected int X;
     protected int Y;
     protected SimulationState state;
@@ -27,6 +28,14 @@ public abstract class Board {
 
     public void setState(SimulationState state) {
         this.state = state;
+    }
+
+    public boolean isPeriodicBoundaryConditions() {
+        return periodicBoundaryConditions;
+    }
+
+    public void setPeriodicBoundaryConditions(boolean periodicBoundaryConditions) {
+        this.periodicBoundaryConditions = periodicBoundaryConditions;
     }
 
     public abstract void checkNeighbours();
