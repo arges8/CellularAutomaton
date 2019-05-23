@@ -1,6 +1,7 @@
 package ca.ca2D;
 
 import ca.Board;
+import ca.Cell;
 import ca.ca2D.cell.CellGoL;
 import ca.helpers.Tile;
 import javafx.scene.paint.Color;
@@ -11,17 +12,19 @@ import java.util.Random;
 
 public class GameOfLife extends Board {
     List<List<CellGoL>> cells;
+    public enum patterns {
+        GLIDER, CONST, OSCILLATOR, RANDOM, EMPTY
+    }
 
     public GameOfLife(int x, int y) {
         X = x;
         Y = y;
         setState(SimulationState.FRESH);
         cells = new ArrayList<>(y);
-        Random generator = new Random();
         for (int i = 0; i < y; ++i) {
             cells.add(new ArrayList<CellGoL>(x));
             for (int j = 0; j < x; ++j) {
-                cells.get(i).add(new CellGoL(generator.nextBoolean()));
+                cells.get(i).add(new CellGoL());
             }
         }
     }
@@ -124,5 +127,51 @@ public class GameOfLife extends Board {
         }
     }
 
+    public void loadPattern(patterns pat) {
+        for (int i = 0; i < Y; ++i) {
+            for (int j = 0; j < X; ++j) {
+                cells.get(i).get(j).setActive(false);
+            }
+        }
+        switch (pat) {
+            case CONST:
+                cells.get(3).get(X / 2).setActive(true);
+                cells.get(3).get(X / 2 + 1).setActive(true);
+                cells.get(4).get(X / 2 - 1).setActive(true);
+                cells.get(4).get(X / 2 + 2).setActive(true);
+                cells.get(5).get(X / 2).setActive(true);
+                cells.get(5).get(X / 2 + 1).setActive(true);
+                break;
+            case GLIDER:
+                cells.get(3).get(X / 2).setActive(true);
+                cells.get(4).get(X / 2 + 1).setActive(true);
+                cells.get(5).get(X / 2 - 1).setActive(true);
+                cells.get(5).get(X / 2).setActive(true);
+                cells.get(5).get(X / 2 + 1).setActive(true);
+                break;
+            case RANDOM:
+                Random generator = new Random();
+                for (int i = 0; i < Y; ++i) {
+                    for (int j = 0; j < X; ++j) {
+                        cells.get(i).get(j).setActive(generator.nextBoolean());
+                    }
+                }
+                break;
+            case OSCILLATOR:
+                cells.get(3).get(X / 2).setActive(true);
+                cells.get(4).get(X / 2).setActive(true);
+                cells.get(5).get(X / 2).setActive(true);
+                break;
+            case EMPTY:
+                break;
+            default:
+                throw new IllegalArgumentException("There are no argument: " + pat);
+        }
+    }
+
+    @Override
+    public Cell getCell(int x, int y) {
+        return cells.get(y).get(x);
+    }
 }
 

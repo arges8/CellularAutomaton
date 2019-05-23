@@ -2,6 +2,7 @@ package ca.ca1D;
 
 import ca.Board;
 
+import ca.Cell;
 import ca.ca1D.cell.Cell1D;
 import ca.helpers.Tile;
 import javafx.scene.paint.Color;
@@ -16,7 +17,7 @@ public class Board1D extends Board {
 
     public Board1D(int size) {
         this.X = size;
-        this.Y = 110;
+        this.Y = 70;
         setState(SimulationState.FRESH);
         cells = new ArrayList<>();
         List<Cell1D> tmp = new ArrayList<>(size);
@@ -187,5 +188,10 @@ public class Board1D extends Board {
             }
         } else
             setState(SimulationState.FINISHED);
+    }
+
+    @Override
+    public Cell getCell(int x, int y) {
+        return cells.get(y).get(x);
     }
 }

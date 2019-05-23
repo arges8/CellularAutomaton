@@ -44,4 +44,6 @@ public abstract class Board {
 
     public abstract void draw(List<Tile> tiles);
 
+    public abstract Cell getCell(int x, int y);
+
 }

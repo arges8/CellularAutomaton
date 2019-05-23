@@ -24,7 +24,14 @@ public class SettingsController {
     private ObservableList rules = FXCollections.observableArrayList(30, 60, 90, 110, 255);
 
     @FXML
+    private ObservableList patterns = FXCollections.observableArrayList(GameOfLife.patterns.CONST,
+            GameOfLife.patterns.GLIDER, GameOfLife.patterns.RANDOM, GameOfLife.patterns.OSCILLATOR, GameOfLife.patterns.EMPTY);
+
+    @FXML
     private ChoiceBox<Integer> ruleBox;
+
+    @FXML
+    private ChoiceBox<GameOfLife.patterns> patternBox;
 
     @FXML
     private ScrollBar sizeScroll;
@@ -66,17 +73,19 @@ public class SettingsController {
         GoLgroup = new ToggleGroup();
         ruleBox.setValue(90);
         ruleBox.setItems(rules);
+        patternBox.setValue(GameOfLife.patterns.GLIDER);
+        patternBox.setItems(patterns);
         sizeScroll.setMin(5);
-        sizeScroll.setMax(140);
-        sizeScroll.setValue(140);
+        sizeScroll.setMax(90);
+        sizeScroll.setValue(90);
         size1D.setText(Integer.toString((int) sizeScroll.getValue()));
         sizeScrollx.setMin(5);
-        sizeScrollx.setMax(140);
-        sizeScrollx.setValue(140);
+        sizeScrollx.setMax(90);
+        sizeScrollx.setValue(90);
         sizex.setText(Integer.toString((int) sizeScrollx.getValue()));
         sizeScrolly.setMin(5);
-        sizeScrolly.setMax(110);
-        sizeScrolly.setValue(110);
+        sizeScrolly.setMax(70);
+        sizeScrolly.setValue(70);
         sizey.setText(Integer.toString((int) sizeScrolly.getValue()));
         setToggleGroups(periodicBC1D, absorbingBC1D, group);
         setToggleGroups(periodicBC, absorbingBC, GoLgroup);
@@ -109,6 +118,7 @@ public class SettingsController {
         Controller mainController = mainGUI.getController();
         GameOfLife tmp = new GameOfLife((int) sizeScrollx.getValue(), (int) sizeScrolly.getValue());
         tmp.setPeriodicBoundaryConditions(periodicBC.isSelected());
+        tmp.loadPattern(patternBox.getValue());
         mainController.setBoard(tmp);
     }
 

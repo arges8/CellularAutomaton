@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.awt.image.PixelGrabber;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 public class Controller {
     private List<Tile> tiles;
 
-    private static Board board;
+    public static Board board;
 
     int checkX;
 
@@ -39,7 +40,7 @@ public class Controller {
     public void initialize() {
         timeSteps.setText("1");
         loadSettingsController();
-        changeBoardSize(140, 100);
+        changeBoardSize(90, 70);
         checkX = board.getX();
         checkY = board.getY();
         timer = new AnimationTimer() {
@@ -131,8 +132,8 @@ public class Controller {
         }
         for (int i = 0; i < capacity; ++i) {
             Tile tile = tiles.get(i);
-            tile.setTranslateX(6 * (i % x));
-            tile.setTranslateY(6 * (i / x));
+            tile.setTranslateX(Tile.PIXEL_SIZE * (i % x));
+            tile.setTranslateY(Tile.PIXEL_SIZE * (i / x));
 
         }
         pane.getChildren().clear();
