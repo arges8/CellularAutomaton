@@ -192,6 +192,6 @@ public class Board1D extends Board {
 
     @Override
     public Cell getCell(int x, int y) {
-        return cells.get(y).get(x);
+        return null;
     }
 }

@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.awt.image.PixelGrabber;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class Controller {
             public void handle(long l) {
                 parallelDraw();
                 try {
-                    Thread.sleep(0);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

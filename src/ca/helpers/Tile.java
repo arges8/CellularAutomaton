@@ -1,5 +1,6 @@
 package ca.helpers;
 
+import ca.Cell;
 import ca.controllers.Controller;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -15,8 +16,11 @@ public class Tile extends StackPane {
         getChildren().addAll(border);
 
         setOnMouseClicked(event -> {
-            border.setFill(new Color(28.0 / 255.0, 153.0 / 255.0, 231.0 / 255.0, 1));
-            Controller.board.getCell((int)(getTranslateX()/PIXEL_SIZE), (int)(getTranslateY()/PIXEL_SIZE)).setActive(true);
+            Cell cell = Controller.board.getCell((int)(getTranslateX()/PIXEL_SIZE), (int)(getTranslateY()/PIXEL_SIZE));
+            if(cell != null) {
+                border.setFill(new Color(28.0 / 255.0, 153.0 / 255.0, 231.0 / 255.0, 1));
+                cell.setActive(true);
+            }
         });
     }
     public void setColor(Color color) {
