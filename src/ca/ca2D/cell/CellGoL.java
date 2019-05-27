@@ -12,6 +12,11 @@ public class CellGoL extends Cell {
         super(active);
     }
 
+    @Override
+    public int createNewGerm() {
+        return 0;
+    }
+
     public int getNeighbours() {
         return neighbours;
     }

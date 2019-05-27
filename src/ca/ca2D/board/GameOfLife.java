@@ -1,4 +1,4 @@
-package ca.ca2D;
+package ca.ca2D.board;
 
 import ca.Board;
 import ca.Cell;
@@ -22,7 +22,7 @@ public class GameOfLife extends Board {
         setState(SimulationState.FRESH);
         cells = new ArrayList<>(y);
         for (int i = 0; i < y; ++i) {
-            cells.add(new ArrayList<CellGoL>(x));
+            cells.add(new ArrayList<>(x));
             for (int j = 0; j < x; ++j) {
                 cells.get(i).add(new CellGoL());
             }

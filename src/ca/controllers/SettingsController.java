@@ -2,7 +2,8 @@ package ca.controllers;
 
 import ca.Board;
 import ca.ca1D.Board1D;
-import ca.ca2D.GameOfLife;
+import ca.ca2D.board.GameOfLife;
+import ca.ca2D.board.Grains;
 import com.jfoenix.controls.JFXRadioButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,10 +29,23 @@ public class SettingsController {
             GameOfLife.patterns.GLIDER, GameOfLife.patterns.RANDOM, GameOfLife.patterns.OSCILLATOR, GameOfLife.patterns.EMPTY);
 
     @FXML
+    private ObservableList neighborhoods = FXCollections.observableArrayList(Grains.NeighborhoodType.VON_NEUMANN);
+
+    @FXML
+    private ObservableList nucleations = FXCollections.observableArrayList(Grains.Nucleations.HOMOGENEUS,
+            Grains.Nucleations.RANDOM, Grains.Nucleations.BANNED);
+
+    @FXML
     private ChoiceBox<Integer> ruleBox;
 
     @FXML
     private ChoiceBox<GameOfLife.patterns> patternBox;
+
+    @FXML
+    private ChoiceBox<Grains.NeighborhoodType> neighborhoodBox;
+
+    @FXML
+    private ChoiceBox<Grains.Nucleations> nucleationBox;
 
     @FXML
     private ScrollBar sizeScroll;
@@ -43,6 +57,12 @@ public class SettingsController {
     private ScrollBar sizeScrolly;
 
     @FXML
+    private ScrollBar sizeGrainsx;
+
+    @FXML
+    private ScrollBar sizeGrainsy;
+
+    @FXML
     private Label size1D;
 
     @FXML
@@ -50,6 +70,12 @@ public class SettingsController {
 
     @FXML
     private Label sizey;
+
+    @FXML
+    private Label grainsx;
+
+    @FXML
+    private Label grainsy;
 
     @FXML
     private JFXRadioButton periodicBC;
@@ -75,18 +101,15 @@ public class SettingsController {
         ruleBox.setItems(rules);
         patternBox.setValue(GameOfLife.patterns.GLIDER);
         patternBox.setItems(patterns);
-        sizeScroll.setMin(5);
-        sizeScroll.setMax(90);
-        sizeScroll.setValue(90);
-        size1D.setText(Integer.toString((int) sizeScroll.getValue()));
-        sizeScrollx.setMin(5);
-        sizeScrollx.setMax(90);
-        sizeScrollx.setValue(90);
-        sizex.setText(Integer.toString((int) sizeScrollx.getValue()));
-        sizeScrolly.setMin(5);
-        sizeScrolly.setMax(70);
-        sizeScrolly.setValue(70);
-        sizey.setText(Integer.toString((int) sizeScrolly.getValue()));
+        neighborhoodBox.setValue(Grains.NeighborhoodType.VON_NEUMANN);
+        neighborhoodBox.setItems(neighborhoods);
+        nucleationBox.setValue(Grains.Nucleations.HOMOGENEUS);
+        nucleationBox.setItems(nucleations);
+        setSizeScroll(sizeScroll, 5, 90, size1D);
+        setSizeScroll(sizeScrollx, 5, 90, sizex);
+        setSizeScroll(sizeScrolly, 5, 70, sizey);
+        setSizeScroll(sizeGrainsx, 5, 90, grainsx);
+        setSizeScroll(sizeGrainsy, 5, 70, grainsy);
         setToggleGroups(periodicBC1D, absorbingBC1D, group);
         setToggleGroups(periodicBC, absorbingBC, GoLgroup);
         Board1D tmp = new Board1D((int) sizeScroll.getValue());
@@ -123,6 +146,17 @@ public class SettingsController {
     }
 
     @FXML
+    public void applyButtonGrainsAction() throws IOException {
+        FXMLLoader mainGUI = new FXMLLoader(getClass().getResource("../templates/ca1d.fxml"));
+        mainGUI.load();
+        Controller mainController = mainGUI.getController();
+        Grains tmp = new Grains((int) sizeGrainsx.getValue(), (int)sizeGrainsy.getValue());
+        tmp.setNeighborhood(neighborhoodBox.getValue());
+        tmp.nucleation(nucleationBox.getValue());
+        mainController.setBoard(tmp);
+    }
+
+    @FXML
     public void setSize1DLabel() {
         size1D.setText(Integer.toString((int) sizeScroll.getValue()));
     }
@@ -137,6 +171,13 @@ public class SettingsController {
         sizey.setText(Integer.toString((int) sizeScrolly.getValue()));
     }
 
+    public void setSizeScroll(ScrollBar sb, int min, int max, Label label) {
+        sb.setMin(min);
+        sb.setMax(max);
+        sb.setValue(max);
+        label.setText(Integer.toString((int) sb.getValue()));
+    }
+
     public void setToggleGroups(JFXRadioButton selected, JFXRadioButton notSelected, ToggleGroup g) {
         selected.setToggleGroup(g);
         selected.setSelected(true);
@@ -144,6 +185,5 @@ public class SettingsController {
         notSelected.setToggleGroup(g);
         notSelected.setSelected(false);
         notSelected.setSelectedColor(new Color(28.0 / 255.0, 153.0 / 255.0, 231.0 / 255.0, 1));
-
     }
 }

@@ -9,6 +9,11 @@ public class Cell1D  extends Cell {
         super(b);
     }
 
+    @Override
+    public int createNewGerm() {
+        return 0;
+    }
+
     public Cell1D() {
     }
 

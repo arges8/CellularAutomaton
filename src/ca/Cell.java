@@ -1,7 +1,7 @@
 package ca;
 
-public class Cell {
-    boolean active;
+public abstract class Cell {
+    protected boolean active;
 
     public Cell() {
     }
@@ -17,4 +17,6 @@ public class Cell {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public abstract int createNewGerm();
 }
