@@ -35,7 +35,13 @@ public class SettingsController {
 
     @FXML
     private ObservableList nucleations = FXCollections.observableArrayList(Grains.Nucleations.HOMOGENEUS,
-            Grains.Nucleations.RANDOM, Grains.Nucleations.BANNED);
+            Grains.Nucleations.RANDOM, Grains.Nucleations.BANNED, Grains.Nucleations.RADIUS);
+
+    @FXML
+    private ObservableList germsRow;
+
+    @FXML
+    private ObservableList germsCol;
 
     @FXML
     private ChoiceBox<Integer> ruleBox;
@@ -48,6 +54,12 @@ public class SettingsController {
 
     @FXML
     private ChoiceBox<Grains.Nucleations> nucleationBox;
+
+    @FXML
+    private ChoiceBox<Integer> germsRowBox;
+
+    @FXML
+    private ChoiceBox<Integer> germsColBox;
 
     @FXML
     private ScrollBar sizeScroll;
@@ -65,6 +77,9 @@ public class SettingsController {
     private ScrollBar sizeGrainsy;
 
     @FXML
+    private ScrollBar radiusScroll;
+
+    @FXML
     private Label size1D;
 
     @FXML
@@ -78,6 +93,9 @@ public class SettingsController {
 
     @FXML
     private Label grainsy;
+
+    @FXML
+    private Label radiusLabel;
 
     @FXML
     private JFXRadioButton periodicBC;
@@ -121,6 +139,9 @@ public class SettingsController {
         setSizeScroll(sizeScrolly, 5, 70, sizey);
         setSizeScroll(sizeGrainsx, 5, 90, grainsx);
         setSizeScroll(sizeGrainsy, 5, 70, grainsy);
+        setSizeScroll(radiusScroll, 1, 12, radiusLabel);
+        setGrainsxLabel();
+        setGrainsyLabel();
         setToggleGroups(periodicBC1D, absorbingBC1D, group);
         setToggleGroups(periodicBC, absorbingBC, GoLgroup);
         setToggleGroups(periodicGrainsBC, absorbingGrainsBC, grainsGroup);
@@ -163,6 +184,9 @@ public class SettingsController {
         mainGUI.load();
         Controller mainController = mainGUI.getController();
         Grains tmp = new Grains((int) sizeGrainsx.getValue(), (int)sizeGrainsy.getValue());
+        tmp.setRadius((int) radiusScroll.getValue());
+        tmp.setGermsPerRow(germsRowBox.getValue());
+        tmp.setGermsPerCol(germsColBox.getValue());
         tmp.setNeighborhood(neighborhoodBox.getValue());
         tmp.nucleation(nucleationBox.getValue());
         tmp.setPeriodicBoundaryConditions(periodicGrainsBC.isSelected());
@@ -182,6 +206,30 @@ public class SettingsController {
     @FXML
     public void setSizeyLabel() {
         sizey.setText(Integer.toString((int) sizeScrolly.getValue()));
+    }
+
+    @FXML
+    public void setGrainsxLabel() {
+        grainsx.setText(Integer.toString((int) sizeGrainsx.getValue()));
+        germsRow = FXCollections.observableArrayList((int)sizeGrainsx.getValue(), (int)sizeGrainsx.getValue()/2,
+                (int)sizeGrainsx.getValue()/4, (int)sizeGrainsx.getValue()/6, (int)sizeGrainsx.getValue()/9);
+        germsRowBox.setValue((int)sizeGrainsx.getValue()/9);
+        germsRowBox.setItems(germsRow);
+
+    }
+
+    @FXML
+    public void setGrainsyLabel() {
+        grainsy.setText(Integer.toString((int) sizeGrainsy.getValue()));
+        germsCol = FXCollections.observableArrayList((int)sizeGrainsy.getValue(), (int)sizeGrainsy.getValue()/2,
+                (int)sizeGrainsy.getValue()/4, (int)sizeGrainsy.getValue()/6, (int)sizeGrainsy.getValue()/9);
+        germsColBox.setValue((int)sizeGrainsy.getValue()/9);
+        germsColBox.setItems(germsCol);
+    }
+
+    @FXML
+    public void setRadiusLabel() {
+        radiusLabel.setText(Integer.toString((int) radiusScroll.getValue()));
     }
 
     public void setSizeScroll(ScrollBar sb, int min, int max, Label label) {
