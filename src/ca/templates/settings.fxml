@@ -266,7 +266,7 @@
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <JFXRadioButton fx:id="periodicBC1" prefHeight="20.0" prefWidth="180.0" text="Periodic" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <JFXRadioButton fx:id="periodicGrainsBC" prefHeight="20.0" prefWidth="180.0" text="Periodic" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -274,7 +274,7 @@
                               <Insets bottom="20.0" left="10.0" />
                            </GridPane.margin>
                         </JFXRadioButton>
-                        <JFXRadioButton fx:id="absorbingBC1" prefHeight="22.0" prefWidth="182.0" text="Absorbing" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <JFXRadioButton fx:id="absorbingGrainsBC" prefHeight="22.0" prefWidth="182.0" text="Absorbing" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <font>
                               <Font size="14.0" />
                            </font>

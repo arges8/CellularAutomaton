@@ -29,7 +29,9 @@ public class SettingsController {
             GameOfLife.patterns.GLIDER, GameOfLife.patterns.RANDOM, GameOfLife.patterns.OSCILLATOR, GameOfLife.patterns.EMPTY);
 
     @FXML
-    private ObservableList neighborhoods = FXCollections.observableArrayList(Grains.NeighborhoodType.VON_NEUMANN);
+    private ObservableList neighborhoods = FXCollections.observableArrayList(Grains.NeighborhoodType.VON_NEUMANN,
+            Grains.NeighborhoodType.PENTAGONAL_RAND, Grains.NeighborhoodType.HEXAGONAL_LEFT, Grains.NeighborhoodType.HEXAGONAL_RIGHT,
+            Grains.NeighborhoodType.HEXAGONAL_RAND, Grains.NeighborhoodType.MOORE);
 
     @FXML
     private ObservableList nucleations = FXCollections.observableArrayList(Grains.Nucleations.HOMOGENEUS,
@@ -89,14 +91,23 @@ public class SettingsController {
     @FXML
     private JFXRadioButton absorbingBC1D;
 
+    @FXML
+    private JFXRadioButton periodicGrainsBC;
+
+    @FXML
+    private JFXRadioButton absorbingGrainsBC;
+
     private ToggleGroup group;
 
     private ToggleGroup GoLgroup;
+
+    private ToggleGroup grainsGroup;
 
     @FXML
     public void initialize() {
         group = new ToggleGroup();
         GoLgroup = new ToggleGroup();
+        grainsGroup = new ToggleGroup();
         ruleBox.setValue(90);
         ruleBox.setItems(rules);
         patternBox.setValue(GameOfLife.patterns.GLIDER);
@@ -112,6 +123,7 @@ public class SettingsController {
         setSizeScroll(sizeGrainsy, 5, 70, grainsy);
         setToggleGroups(periodicBC1D, absorbingBC1D, group);
         setToggleGroups(periodicBC, absorbingBC, GoLgroup);
+        setToggleGroups(periodicGrainsBC, absorbingGrainsBC, grainsGroup);
         Board1D tmp = new Board1D((int) sizeScroll.getValue());
         tmp.setRule(ruleBox.getValue());
         tmp.setPeriodicBoundaryConditions(periodicBC1D.isSelected());
@@ -153,6 +165,7 @@ public class SettingsController {
         Grains tmp = new Grains((int) sizeGrainsx.getValue(), (int)sizeGrainsy.getValue());
         tmp.setNeighborhood(neighborhoodBox.getValue());
         tmp.nucleation(nucleationBox.getValue());
+        tmp.setPeriodicBoundaryConditions(periodicGrainsBC.isSelected());
         mainController.setBoard(tmp);
     }
 
