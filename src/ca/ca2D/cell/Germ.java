@@ -11,6 +11,9 @@ public class Germ extends Cell {
     private static HashMap<Integer, Color> colorsMap = new HashMap<>();
     static int counter = 0;
     int dominantNeighborhood;
+    int currentEnergy;
+    boolean firstEnergyCalculated;
+    static double kt = 3;
     public Germ() {
 
     }
@@ -56,5 +59,26 @@ public class Germ extends Cell {
 
     public static HashMap<Integer, Color> getColorsMap() {
         return colorsMap;
+    }
+
+    public void setEnergy(int tmpEnergy) {
+        if(!firstEnergyCalculated) {
+            currentEnergy = tmpEnergy;
+            firstEnergyCalculated = true;
+            return;
+        }
+        int deltaE = tmpEnergy - currentEnergy;
+        if(deltaE <= 0) {
+            currentEnergy = tmpEnergy;
+            setType();
+        }
+        else {
+            Random rand = new Random();
+            double p = Math.exp(-(double)deltaE/kt);
+            if(rand.nextFloat() < p) {
+                currentEnergy = tmpEnergy;
+                setType();
+            }
+        }
     }
 }

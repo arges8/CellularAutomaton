@@ -15,6 +15,7 @@ public class Grains extends Board {
     int radius;
     int germsPerRow = 90;
     int germsPerCol = 10;
+    boolean MC = false;
 
     public enum Nucleations {
         HOMOGENEUS, RADIUS, RANDOM, BANNED
@@ -42,10 +43,18 @@ public class Grains extends Board {
 
     @Override
     public void checkNeighbours() {
-        for (int i = 0; i < Y; ++i) {
-            for (int j = 0; j < X; ++j) {
-                if (!cells.get(i).get(j).isActive()) {
+        if(verifyAllGermsAreActive()) {
+            for(int i=0; i<Y; ++i) {
+                for(int j=0; j<X; ++j) {
                     setGermType(cells.get(i).get(j), j, i);
+                }
+            }
+        } else {
+            for (int i = 0; i < Y; ++i) {
+                for (int j = 0; j < X; ++j) {
+                    if (!cells.get(i).get(j).isActive()) {
+                        setGermType(cells.get(i).get(j), j, i);
+                    }
                 }
             }
         }
@@ -270,13 +279,20 @@ public class Grains extends Board {
         }
         int maxSum = -1;
         int maxIndex = 0;
+        int energySum = 0;
         for (int i = 0; i < noOfTypes + 1; ++i) {
+            if(MC && indexes[i]>0 && germ.getType() != i)
+            {
+                energySum++;
+            }
             if (indexes[i] > maxSum) {
                 maxSum = indexes[i];
                 maxIndex = i;
             }
         }
         germ.setDominantNeighborhood(maxIndex);
+        if(MC)
+            germ.setEnergy(energySum);
     }
 
 
@@ -381,6 +397,18 @@ public class Grains extends Board {
                 }
             }
         }
+        return true;
+    }
+    boolean verifyAllGermsAreActive() {
+        for(int i=0; i<Y; ++i) {
+            for(int j=0; j<X; ++j) {
+                if(!cells.get(i).get(j).isActive()) {
+                    MC = false;
+                    return false;
+                }
+            }
+        }
+        MC = true;
         return true;
     }
 }
