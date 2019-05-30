@@ -16,9 +16,10 @@ public class Grains extends Board {
     int germsPerRow = 90;
     int germsPerCol = 10;
     boolean MC = false;
+    boolean firstLoop = false;
 
     public enum Nucleations {
-        HOMOGENEUS, RADIUS, RANDOM, BANNED
+        HOMOGENEUS, RADIUS, RANDOM, BANNED, EMPTY
     }
 
     public enum NeighborhoodType {
@@ -43,10 +44,18 @@ public class Grains extends Board {
 
     @Override
     public void checkNeighbours() {
-        if(verifyAllGermsAreActive()) {
+        if(verifyAllGermsAreActive() && MC) {
             for(int i=0; i<Y; ++i) {
                 for(int j=0; j<X; ++j) {
                     setGermType(cells.get(i).get(j), j, i);
+                }
+            }
+
+            for (int i = 0; i < Y; ++i) {
+                for (int j = 0; j < X; ++j) {
+                    Random rand = new Random();
+                    if(rand.nextInt(100)>60)
+                        cells.get(i).get(j).hypotheticalEnergy();
                 }
             }
         } else {
@@ -117,6 +126,14 @@ public class Grains extends Board {
         this.germsPerCol = germsPerCol;
     }
 
+    public boolean isMC() {
+        return MC;
+    }
+
+    public void setMC(boolean MC) {
+        this.MC = MC;
+    }
+
     public void nucleation(Nucleations nuc) {
         switch (nuc) {
             case HOMOGENEUS: {
@@ -133,7 +150,7 @@ public class Grains extends Board {
                 Random rand = new Random();
                 for (int i = 0; i < Y; i++) {
                     for (int j = 0; j < X; j++) {
-                        if (rand.nextInt(100) > 90)
+                        if (rand.nextInt(100) > 98)
                             cells.get(i).get(j).createNewGerm();
                     }
                 }
@@ -168,6 +185,10 @@ public class Grains extends Board {
                         }
                     }
                 }
+                break;
+            }
+            case EMPTY: {
+                Tile.setGOL(false);
                 break;
             }
         }
@@ -280,8 +301,15 @@ public class Grains extends Board {
         int maxSum = -1;
         int maxIndex = 0;
         int energySum = 0;
+        List<Integer> takeRandIndex= new ArrayList<>(8);
         for (int i = 0; i < noOfTypes + 1; ++i) {
-            if(MC && indexes[i]>0 && germ.getType() != i)
+            if(indexes[i]>0)
+            {
+                for(int j=0; j<indexes[i]; ++j)
+                    takeRandIndex.add(i);
+                energySum++;
+            }
+            if(firstLoop && indexes[i]>0 && germ.getType() != i)
             {
                 energySum++;
             }
@@ -291,8 +319,10 @@ public class Grains extends Board {
             }
         }
         germ.setDominantNeighborhood(maxIndex);
-        if(MC)
+        if(firstLoop) {
             germ.setEnergy(energySum);
+            germ.setNeighbours(takeRandIndex);
+        }
     }
 
 
@@ -403,12 +433,12 @@ public class Grains extends Board {
         for(int i=0; i<Y; ++i) {
             for(int j=0; j<X; ++j) {
                 if(!cells.get(i).get(j).isActive()) {
-                    MC = false;
+                    firstLoop = false;
                     return false;
                 }
             }
         }
-        MC = true;
+        firstLoop = true;
         return true;
     }
 }

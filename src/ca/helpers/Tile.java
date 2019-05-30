@@ -37,4 +37,7 @@ public class Tile extends StackPane {
         GOL = false;
         border.setFill(Germ.getColorsMap().get(type));
     }
+    public static void setGOL(boolean b) {
+        GOL = b;
+    }
 }

@@ -4,18 +4,22 @@ import ca.Board;
 import ca.ca1D.Board1D;
 import ca.ca2D.board.GameOfLife;
 import ca.ca2D.board.Grains;
+import ca.ca2D.cell.Germ;
 import com.jfoenix.controls.JFXRadioButton;
+import com.jfoenix.controls.JFXTextField;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
+import java.util.regex.Pattern;
 
 public class SettingsController {
 
@@ -35,7 +39,7 @@ public class SettingsController {
 
     @FXML
     private ObservableList nucleations = FXCollections.observableArrayList(Grains.Nucleations.HOMOGENEUS,
-            Grains.Nucleations.RANDOM, Grains.Nucleations.BANNED, Grains.Nucleations.RADIUS);
+            Grains.Nucleations.RANDOM, Grains.Nucleations.BANNED, Grains.Nucleations.RADIUS, Grains.Nucleations.EMPTY);
 
     @FXML
     private ObservableList germsRow;
@@ -115,17 +119,43 @@ public class SettingsController {
     @FXML
     private JFXRadioButton absorbingGrainsBC;
 
+    @FXML
+    private JFXRadioButton MCOn;
+
+    @FXML
+    private JFXRadioButton MCOff;
+
     private ToggleGroup group;
 
     private ToggleGroup GoLgroup;
 
     private ToggleGroup grainsGroup;
 
+    private ToggleGroup MCgroup;
+
+    @FXML
+    private TextField tf;
+
     @FXML
     public void initialize() {
+        tf.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d{0,7}([\\.]\\d{0,4})?")) {
+                    tf.setText(oldValue);
+                } else if(Double.parseDouble(newValue) < 0.1 ){
+                    tf.setText("0.1");
+                } else if(Double.parseDouble(newValue) > 6) {
+                    tf.setText("6");
+                }
+            }
+        });
+        tf.setText("0.1");
         group = new ToggleGroup();
         GoLgroup = new ToggleGroup();
         grainsGroup = new ToggleGroup();
+        MCgroup = new ToggleGroup();
         ruleBox.setValue(90);
         ruleBox.setItems(rules);
         patternBox.setValue(GameOfLife.patterns.GLIDER);
@@ -145,6 +175,7 @@ public class SettingsController {
         setToggleGroups(periodicBC1D, absorbingBC1D, group);
         setToggleGroups(periodicBC, absorbingBC, GoLgroup);
         setToggleGroups(periodicGrainsBC, absorbingGrainsBC, grainsGroup);
+        setToggleGroups(MCOn, MCOff, MCgroup);
         Board1D tmp = new Board1D((int) sizeScroll.getValue());
         tmp.setRule(ruleBox.getValue());
         tmp.setPeriodicBoundaryConditions(periodicBC1D.isSelected());
@@ -187,6 +218,8 @@ public class SettingsController {
         tmp.setRadius((int) radiusScroll.getValue());
         tmp.setGermsPerRow(germsRowBox.getValue());
         tmp.setGermsPerCol(germsColBox.getValue());
+        Germ.setKt(Double.parseDouble(tf.getText()));
+        tmp.setMC(MCOn.isSelected());
         tmp.setNeighborhood(neighborhoodBox.getValue());
         tmp.nucleation(nucleationBox.getValue());
         tmp.setPeriodicBoundaryConditions(periodicGrainsBC.isSelected());

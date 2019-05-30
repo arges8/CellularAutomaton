@@ -1,9 +1,12 @@
 package ca.ca2D.cell;
 
 import ca.Cell;
+import ca.controllers.Controller;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 public class Germ extends Cell {
@@ -11,8 +14,10 @@ public class Germ extends Cell {
     private static HashMap<Integer, Color> colorsMap = new HashMap<>();
     static int counter = 0;
     int dominantNeighborhood;
+    List<Integer> neighbours;
     int currentEnergy;
-    boolean firstEnergyCalculated;
+    int tmpEnergy;
+    boolean firstEnergyCalculated = true;
     static double kt = 3;
     public Germ() {
 
@@ -28,6 +33,18 @@ public class Germ extends Cell {
 
     public void setType() {
         this.type = getDominantNeighborhood();
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public static double getKt() {
+        return kt;
+    }
+
+    public static void setKt(double kt) {
+        Germ.kt = kt;
     }
 
     public int createNewGerm() {
@@ -61,24 +78,45 @@ public class Germ extends Cell {
         return colorsMap;
     }
 
+    public List<Integer> getNeighbours() {
+        return neighbours;
+    }
+
+    public void setNeighbours(List<Integer> neighbours) {
+        this.neighbours = new ArrayList<>(neighbours);
+    }
+
     public void setEnergy(int tmpEnergy) {
-        if(!firstEnergyCalculated) {
-            currentEnergy = tmpEnergy;
-            firstEnergyCalculated = true;
-            return;
+        if(firstEnergyCalculated) {
+            this.currentEnergy = tmpEnergy;
+            firstEnergyCalculated = false;
         }
+    }
+    public void checkDeltaEnergy(int t) {
         int deltaE = tmpEnergy - currentEnergy;
         if(deltaE <= 0) {
             currentEnergy = tmpEnergy;
-            setType();
+            setType(t);
         }
         else {
             Random rand = new Random();
             double p = Math.exp(-(double)deltaE/kt);
             if(rand.nextFloat() < p) {
                 currentEnergy = tmpEnergy;
-                setType();
+                setType(type);
             }
         }
+    }
+    public void hypotheticalEnergy() {
+        int noOfNeighbours = neighbours.size();
+        Random rand = new Random();
+        int hyptheticalType = neighbours.get(rand.nextInt(noOfNeighbours));
+        int E = 0;
+        for(int i : neighbours) {
+            if(hyptheticalType != i)
+                E++;
+        }
+        tmpEnergy = E;
+        checkDeltaEnergy(hyptheticalType);
     }
 }
