@@ -3,6 +3,7 @@ package ca.ca2D.board;
 import ca.Board;
 import ca.Cell;
 import ca.ca2D.cell.Germ;
+import ca.controllers.Controller;
 import ca.helpers.Tile;
 import javafx.scene.paint.Color;
 
@@ -44,9 +45,9 @@ public class Grains extends Board {
 
     @Override
     public void checkNeighbours() {
-        if(verifyAllGermsAreActive() && MC) {
-            for(int i=0; i<Y; ++i) {
-                for(int j=0; j<X; ++j) {
+        if (verifyAllGermsAreActive() && MC) {
+            for (int i = 0; i < Y; ++i) {
+                for (int j = 0; j < X; ++j) {
                     setGermType(cells.get(i).get(j), j, i);
                 }
             }
@@ -54,7 +55,7 @@ public class Grains extends Board {
             for (int i = 0; i < Y; ++i) {
                 for (int j = 0; j < X; ++j) {
                     Random rand = new Random();
-                    if(rand.nextInt(100)>60)
+                    if (rand.nextInt(100) > 60)
                         cells.get(i).get(j).hypotheticalEnergy();
                 }
             }
@@ -88,11 +89,16 @@ public class Grains extends Board {
         int iterator = 0;
         for (int i = 0; i < Y; ++i) {
             for (int j = 0; j < X; ++j) {
-                if (cells.get(i).get(j).isActive())
-                    tiles.get(iterator).setColor(cells.get(i).get(j).getType());
-                else
-                    tiles.get(iterator).setColor(Color.WHITE);
-                iterator++;
+                if(!Controller.energy) {
+                    if (cells.get(i).get(j).isActive())
+                        tiles.get(iterator).setColor(cells.get(i).get(j).getType());
+                    else
+                        tiles.get(iterator).setColor(Color.WHITE);
+                    iterator++;
+                } else {
+                    tiles.get(iterator).setColor(cells.get(i).get(j).getCurrentEnergy(),true);
+                    iterator++;
+                }
             }
         }
     }
@@ -301,16 +307,14 @@ public class Grains extends Board {
         int maxSum = -1;
         int maxIndex = 0;
         int energySum = 0;
-        List<Integer> takeRandIndex= new ArrayList<>(8);
+        List<Integer> takeRandIndex = new ArrayList<>(8);
         for (int i = 0; i < noOfTypes + 1; ++i) {
-            if(indexes[i]>0)
-            {
-                for(int j=0; j<indexes[i]; ++j)
+            if (indexes[i] > 0) {
+                for (int j = 0; j < indexes[i]; ++j)
                     takeRandIndex.add(i);
                 energySum++;
             }
-            if(firstLoop && indexes[i]>0 && germ.getType() != i)
-            {
+            if (firstLoop && indexes[i] > 0 && germ.getType() != i) {
                 energySum++;
             }
             if (indexes[i] > maxSum) {
@@ -319,7 +323,7 @@ public class Grains extends Board {
             }
         }
         germ.setDominantNeighborhood(maxIndex);
-        if(firstLoop) {
+        if (firstLoop) {
             germ.setEnergy(energySum);
             germ.setNeighbours(takeRandIndex);
         }
@@ -429,10 +433,11 @@ public class Grains extends Board {
         }
         return true;
     }
+
     boolean verifyAllGermsAreActive() {
-        for(int i=0; i<Y; ++i) {
-            for(int j=0; j<X; ++j) {
-                if(!cells.get(i).get(j).isActive()) {
+        for (int i = 0; i < Y; ++i) {
+            for (int j = 0; j < X; ++j) {
+                if (!cells.get(i).get(j).isActive()) {
                     firstLoop = false;
                     return false;
                 }

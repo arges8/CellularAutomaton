@@ -144,9 +144,9 @@ public class SettingsController {
                                 String newValue) {
                 if (!newValue.matches("\\d{0,7}([\\.]\\d{0,4})?")) {
                     tf.setText(oldValue);
-                } else if(Double.parseDouble(newValue) < 0.1 ){
+                } else if(!newValue.isEmpty() && Double.parseDouble(newValue) < 0.1 ){
                     tf.setText("0.1");
-                } else if(Double.parseDouble(newValue) > 6) {
+                } else if(!newValue.isEmpty() && Double.parseDouble(newValue) > 6) {
                     tf.setText("6");
                 }
             }
@@ -272,7 +272,7 @@ public class SettingsController {
         label.setText(Integer.toString((int) sb.getValue()));
     }
 
-    public void setToggleGroups(JFXRadioButton selected, JFXRadioButton notSelected, ToggleGroup g) {
+    public static void setToggleGroups(JFXRadioButton selected, JFXRadioButton notSelected, ToggleGroup g) {
         selected.setToggleGroup(g);
         selected.setSelected(true);
         selected.setSelectedColor(new Color(28.0 / 255.0, 153.0 / 255.0, 231.0 / 255.0, 1));

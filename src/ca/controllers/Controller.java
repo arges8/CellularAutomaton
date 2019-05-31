@@ -2,6 +2,7 @@ package ca.controllers;
 
 import ca.Board;
 import ca.helpers.Tile;
+import com.jfoenix.controls.JFXRadioButton;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 
@@ -33,13 +34,25 @@ public class Controller {
     @FXML
     private Pane pane;
 
+    @FXML
+    private JFXRadioButton energyOn;
+
+    @FXML
+    private JFXRadioButton energyOff;
+
+    private ToggleGroup energyGroup;
+
+    public static boolean energy;
+
     private AnimationTimer timer;
 
     @FXML
     public void initialize() {
         timeSteps.setText("1");
+        energyGroup = new ToggleGroup();
         loadSettingsController();
         changeBoardSize(90, 70);
+        SettingsController.setToggleGroups(energyOff, energyOn, energyGroup);
         checkX = board.getX();
         checkY = board.getY();
         timer = new AnimationTimer() {
@@ -73,6 +86,7 @@ public class Controller {
 
     @FXML
     void handleButtonAction(ActionEvent event) {
+        energy = energyOn.isSelected();
         setProperBoardSize();
         for (int i = 0; i < Integer.parseInt(timeSteps.getText()); ++i) {
             board.draw(tiles);
@@ -82,6 +96,7 @@ public class Controller {
 
     @FXML
     void startSimulation() {
+        energy = energyOn.isSelected();
         setProperBoardSize();
         timer.start();
     }

@@ -47,6 +47,14 @@ public class Germ extends Cell {
         Germ.kt = kt;
     }
 
+    public int getCurrentEnergy() {
+        return currentEnergy;
+    }
+
+    public void setCurrentEnergy(int currentEnergy) {
+        this.currentEnergy = currentEnergy;
+    }
+
     public int createNewGerm() {
         Random rand = new Random();
         counter++;

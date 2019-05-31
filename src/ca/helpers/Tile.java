@@ -37,6 +37,46 @@ public class Tile extends StackPane {
         GOL = false;
         border.setFill(Germ.getColorsMap().get(type));
     }
+    public void setColor(int number, boolean energy) {
+        switch (number) {
+            case 0: {
+                border.setFill(new Color(0.32, 0.76, 0.95, 1));
+                break;
+            }
+            case 1: {
+                border.setFill(new Color(0.11, 0.50, 0.86, 1));
+                break;
+            }
+            case 2: {
+                border.setFill(new Color(0.10, 0.35, 0.99, 1));
+                break;
+            }
+            case 3: {
+                border.setFill(new Color(0.18, 0.21, 0.31, 1));
+                break;
+            }
+            case 4: {
+                border.setFill(new Color(0.07, 0.25, 0.13, 1));
+                break;
+            }
+            case 5: {
+                border.setFill(new Color(0.16, 0.54, 0.16, 1));
+                break;
+            }
+            case 6: {
+                border.setFill(new Color(0.21, 0.76, 0.40, 1));
+                break;
+            }
+            case 7: {
+                border.setFill(new Color(0.97, 0.11, 0.11, 1));
+                break;
+            }
+            case 8: {
+                border.setFill(new Color(0.32, 0.04, 0.04, 1));
+                break;
+            }
+        }
+    }
     public static void setGOL(boolean b) {
         GOL = b;
     }
