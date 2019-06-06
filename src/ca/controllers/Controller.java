@@ -3,6 +3,7 @@ package ca.controllers;
 import ca.Board;
 import ca.helpers.Tile;
 import com.jfoenix.controls.JFXRadioButton;
+import com.jfoenix.controls.JFXToggleButton;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 
@@ -35,6 +36,9 @@ public class Controller {
     private Pane pane;
 
     @FXML
+    public JFXToggleButton recrystallization;
+
+    @FXML
     private JFXRadioButton energyOn;
 
     @FXML
@@ -44,10 +48,17 @@ public class Controller {
 
     public static boolean energy;
 
+    public static boolean rec;
+
+    public static boolean startRec;
+
     private AnimationTimer timer;
+
+    private int counter;
 
     @FXML
     public void initialize() {
+        recrystallization.setDisable(true);
         timeSteps.setText("1");
         energyGroup = new ToggleGroup();
         loadSettingsController();
@@ -59,6 +70,7 @@ public class Controller {
             @Override
             public void handle(long l) {
                 parallelDraw();
+                counter++;
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -68,6 +80,14 @@ public class Controller {
                     board.setState(Board.SimulationState.FRESH);
                     this.stop();
                 }
+                if(Integer.parseInt(timeSteps.getText()) > 1) {
+                    if(counter >= Integer.parseInt(timeSteps.getText())) {
+                        this.stop();
+                        if(rec) {
+                            recrystallization.setDisable(false);
+                        }
+                    }
+                }
             }
         };
     }
@@ -75,7 +95,7 @@ public class Controller {
     private void loadSettingsController() {
         try {
             FXMLLoader settings = new FXMLLoader(getClass().getResource("../templates/settings.fxml"));
-            Parent root = settings.load();
+            settings.load();
 
             SettingsController settingsController = settings.getController();
             board = settingsController.initialSettings();
@@ -92,10 +112,14 @@ public class Controller {
             board.draw(tiles);
             board.play();
         }
+        if(rec) {
+            recrystallization.setDisable(false);
+        }
     }
 
     @FXML
     void startSimulation() {
+        counter = 0;
         energy = energyOn.isSelected();
         setProperBoardSize();
         timer.start();
@@ -104,6 +128,9 @@ public class Controller {
     @FXML
     void stopSimulation() {
         timer.stop();
+        if(rec) {
+            recrystallization.setDisable(false);
+        }
     }
 
     void setProperBoardSize() {
@@ -157,5 +184,14 @@ public class Controller {
     private void parallelDraw() {
         board.draw(tiles);
         board.play();
+    }
+
+    @FXML
+    public void setRecrystallization() {
+        if(!recrystallization.isDisabled() && recrystallization.isSelected()) {
+            recrystallization.setDisable(true);
+            startRec = true;
+            rec = false;
+        }
     }
 }

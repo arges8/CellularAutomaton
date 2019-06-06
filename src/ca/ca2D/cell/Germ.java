@@ -4,21 +4,25 @@ import ca.Cell;
 import ca.controllers.Controller;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Germ extends Cell {
     int type;
     private static HashMap<Integer, Color> colorsMap = new HashMap<>();
+    public List<Map.Entry<Integer, Integer>> neighboursCoordinates = new LinkedList<>();
     static int counter = 0;
     int dominantNeighborhood;
-    List<Integer> neighbours;
+    List<Integer> neighbours = new LinkedList<>();
     int currentEnergy;
     int tmpEnergy;
     boolean firstEnergyCalculated = true;
     static double kt = 3;
+    double dislocationDensity = 0;
+    boolean recrystalized;
+    static boolean dislocationNucleationOccured;
+    static int disId;
+    boolean coordinatesAdded;
+    public boolean check;
     public Germ() {
 
     }
@@ -52,7 +56,10 @@ public class Germ extends Cell {
     }
 
     public void setCurrentEnergy(int currentEnergy) {
-        this.currentEnergy = currentEnergy;
+        if(recrystalized)
+            this.currentEnergy = 0;
+        else
+            this.currentEnergy = currentEnergy;
     }
 
     public int createNewGerm() {
@@ -100,6 +107,51 @@ public class Germ extends Cell {
             firstEnergyCalculated = false;
         }
     }
+
+    public double getDislocationDensity() {
+        return dislocationDensity;
+    }
+
+    public void setDislocationDensity(double dislocationDensity) {
+        this.dislocationDensity = dislocationDensity;
+    }
+
+    public void increaseDislocationDensity(double dislocationDensity) {
+        this.dislocationDensity += dislocationDensity;
+    }
+
+    public boolean isRecrystalized() {
+        return recrystalized;
+    }
+
+    public void setRecrystalized(boolean recrystalized) {
+        this.recrystalized = recrystalized;
+    }
+
+    public static boolean isDislocationNucleationOccured() {
+        return dislocationNucleationOccured;
+    }
+
+    public static void setDislocationNucleationOccured(boolean dislocationNucleationOccured) {
+        Germ.dislocationNucleationOccured = dislocationNucleationOccured;
+    }
+
+    public static int getDisId() {
+        return disId;
+    }
+
+    public static void setDisId(int disId) {
+        Germ.disId = disId;
+    }
+
+    public boolean isCoordinatesAdded() {
+        return coordinatesAdded;
+    }
+
+    public void setCoordinatesAdded(boolean coordinatesAdded) {
+        this.coordinatesAdded = coordinatesAdded;
+    }
+
     public void checkDeltaEnergy(int t) {
         int deltaE = tmpEnergy - currentEnergy;
         if(deltaE <= 0) {
